@@ -1,16 +1,20 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+const config = require('config');
 const app = express();
 const port = 3000;
 
+// Mongodb client
 const mongoDb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 
 let db;
-const uri = 'mongodb+srv://admin:admin@online-store-gzuow.mongodb.net/test?retryWrites=true';
+// Add your config file with mongodb uri
+const uri = config.mongoDbAtlas;
 
 const client = new MongoClient(uri, {useNewUrlParser: true});
 
+// Connect to remote Mongodb Atlas server
 client.connect(err => {
     if (err) return console.log(err);
 
@@ -19,13 +23,16 @@ client.connect(err => {
     app.listen(port, () => console.log(`Server is running listening on port ${port}!`));
 });
 
+// JSON middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+// API server status
 app.get('/', (req, res) => {
     res.status(200).send("Hello world!");
 });
 
+// Add a product
 app.post('/product/create', (req, res) => {
     if (req.body.title === undefined || '') return res.status(400).send({message: 'Parameter title missing'});
     if (req.body.description === undefined || '') return res.status(400).send({message: 'Parameter description missing'});
@@ -51,6 +58,7 @@ app.post('/product/create', (req, res) => {
     });
 });
 
+// Get all product
 app.get('/product/get/all', (req, res) => {
     db.collection('products').find().toArray((err, result) => {
         if (err) return res.status(500).send({message: 'error fetching products'});
@@ -59,6 +67,7 @@ app.get('/product/get/all', (req, res) => {
     });
 });
 
+// Get product by ID
 app.get('/product/get/:id', (req, res) => {
     if (req.params.id === '' || undefined) return res.status(400).send({message: 'Parameter id missing'});
 
@@ -71,6 +80,7 @@ app.get('/product/get/:id', (req, res) => {
     });
 });
 
+// Get product by title
 app.get('/product/getByTitle', (req, res) => {
     if (req.query.q === '' || undefined) return res.status(400).send({message: 'Parameter query missing'});
 
@@ -83,6 +93,7 @@ app.get('/product/getByTitle', (req, res) => {
     });
 });
 
+// Delete a product
 app.delete('/product/delete/:id', (req, res) => {
     if (req.params.id === '' || undefined) return res.status(400).send({message: 'Parameter id missing'});
 
@@ -95,6 +106,7 @@ app.delete('/product/delete/:id', (req, res) => {
     });
 });
 
+// Update a product
 app.put('/product/update', (req, res) => {
     if (req.body.id === undefined || '') return res.status(400).send({message: 'Parameter id missing'});
 
