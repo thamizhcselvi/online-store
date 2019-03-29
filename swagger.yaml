@@ -1,0 +1,159 @@
+swagger: '2.0'
+info:
+  description: ''
+  version: 1.0.0
+  title: Online Store
+  contact:
+    email: thamizhcselvi@gmail.com
+host: 'localhost:3000'
+basePath: /
+schemes:
+- https
+- http
+paths:
+  /product/get/all:
+    get:
+      tags:
+      - store
+      summary: Details of all the products
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: List of products in the store
+          schema:
+            $ref: '#/definitions/Product'
+        '500':
+          description: Error while fetching products
+  /product/getBytitle:
+    get:
+      tags:
+      - store
+      summary: Fetching the details of a particular product based on title
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: title
+        type: string
+        required: true
+      responses:
+        '200':
+          description: A particular product details
+          schema:
+            $ref: '#/definitions/Product'
+        '500':
+          description: Error while fetching products
+  /product/create:
+    post:
+      tags:
+      - store
+      summary: Add a new product to the store
+      description: ''
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Product object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Successfully added to the store
+          schema:
+            $ref: '#/definitions/Product'
+  /product/update:
+    put:
+      tags:
+      - store
+      summary: Update an existing product
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Product object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Successfully modified
+  '/product/delete/{id}':
+    delete:
+      tags:
+      - store
+      summary: Deleting a product
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: string
+        description: 'Product object that needs to be deleted '
+        required: true
+      responses:
+        '200':
+          description: Successfully deleted
+        '400':
+          description: Delete operation failed
+definitions:
+  Product:
+    description: Model contains product info
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+        example: iPhone
+      category:
+        type: string
+        example: Gadgets
+      subcategory:
+        type: string
+        example: Mobile Phones
+      color:
+        type: string
+        example: red
+      size:
+        type: string
+        example: 138.3 x 67.1 x 7.1
+      variants:
+        type: string
+      skuid:
+        type: string
+        example: sku147
+      brand:
+        type: string
+        example: Apple
+      imageUrl:
+        type: string
+      type:
+        type: array
+        items:
+          type: string
+          enum:
+          - physical product
+          - digital product
+          default: physical
+      price:
+        type: number
+        example: 34000
+      priceWithTax:
+        type: number
+        example: 34563.9
+      gst:
+        type: number
+        example: 0.78
