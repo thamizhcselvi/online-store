@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require('body-parser');
-const config = require('config');
+const config = require('./config');
 const app = express();
 const port = 3000;
 
